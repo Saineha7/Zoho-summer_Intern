@@ -1,1 +1,182 @@
+DAY 1 – OOP CONCEPTS
 
+CLASS
+1.	User-defined datatype.
+2.	class and struct keywords are mostly interchangeable
+class vs struct
+-	Default access specifier for members and bases :
+	Public(struct/union)
+	private(class)
+3.	A class with final specifier cannot be derived. It will result in compilation error
+class A final { };		class B : public A { };
+// compilation error: cannot derive from final class.
+4.	Access specifiers –
+Public – full access (IS-A)
+Protected – class itself, derived classes and friends
+Private – class and friends have access (HAS-A)
+5.	Data members = variables = fields
+Member functions = methods
+Member types = nested classes
+
+OBJECT
+1.	Object is an instance of a class
+
+INHERITANCE
+1.	Default inheritance is same as default visibility of members.
+2.	class can be derived from a struct and vice versa. In that case, the default inheritance is controlled by the child.
+
+ABSTRACTION
+1.	Process of hiding irrelevant details from user.
+(real-life eg:  man driving a car – he only knows pressing accelerator increases the speed but he does not know how on pressing accelerator the speed is actually increasing  he does not know about the inner mechanism of the car or the implementation of accelerator, brakes in the car)
+
+2.	Implementation – using classes, header files.
+3.	Abstraction using classes - A Class can decide which data member will be visible to outside world and which is not.
+4.	Abstraction in header files – we just call the pow() function present in math.h header file and pass the args to calculate the power.
+5.	The members that defines the internal implementation can be marked as private in a class. And the important information needed to be given to the outside world can be marked as public. And these public members can access the private members as they are inside the class.
+Program:
+// Abstraction 
+
+#include<iostream>
+using namespace std;
+
+class area
+{
+    private:
+    int r;
+    float pi = 3.14;
+    
+    public:
+    void setRadius(int rad);
+    void calcCircum();
+};
+
+void area::setRadius(int rad)
+{
+    r = rad;
+    calcCircum();
+}
+
+void area::calcCircum()
+{
+    cout<<"Circumference: "<<2*pi*r;
+}
+
+int main()
+{
+    area a;
+    a.setRadius(7);
+    return 0;
+}
+
+ENCAPSULATION
+1.	Process of combining data and function into a single unit like capsule.
+2.	This is to avoid the access of private data members from outside the class.
+3.	To achieve encapsulation, we make all data members of class private and create public functions, using them we can get the values from these data members or set the value to these data members.
+4.	Encapsulation also leads to data abstraction or hiding. As using encapsulation also hides the data. 
+5.	Implementation – using class and access modifiers.
+Program:
+#include<iostream>
+using namespace std;
+  
+class Encapsulation
+{
+    private:
+        int x;
+          
+    public:
+        void set(int a)
+        {
+            x =a;
+        }
+         
+        int get()
+        {
+            return x;
+        }
+};
+  
+int main()
+{
+    Encapsulation e;
+    e.set(5);
+    cout<<e.get();
+    return 0;
+}
+
+INHERITANCE
+1.	Child class acquires the properties of parent/base class.
+2.	Types:
+-	Single
+-	Multiple
+-	Multilevel
+-	Hierarchical
+-	Hybrid
+3.	Public visibility - retains the accessibility of all the members of the base class. The private members are not accessible to the derived class.
+4.	Protected visibility - All the members of the base class become protected members of the derived class.
+5.	Private visibility - all the members of the base class become private in the derived class.
+Program:
+// single inheritance
+#include<iostream>
+using namespace std;
+
+class electronicDevice
+
+{
+  public:
+    electronicDevice()
+    {
+        cout << "electronic device"<<endl;
+    }
+};
+
+ // derived class
+
+class Computer: public electronicDevice
+{
+  public:
+    Computer()
+    {
+        cout << "I am a computer.\n\n";
+    }
+};
+
+int main()
+
+{
+    Computer obj; 
+    return 0;
+}
+
+POLYMORPHISM
+1.	 Feature using which an object behaves differently in different situation.
+2.	Function overloading and operator overloading.
+3.	Function overloading:
+ We can have more than one function with same name but different numbers, type or sequence of arguments.
+
+Program:
+// Function overloading
+
+#include <iostream>
+using namespace std;
+
+class shapes
+{
+    public:
+    int area(int r)
+    {
+        return 3.14*r*r;
+    }
+    
+    int area(int b, int h)
+    {
+        return 0.5*b*h;
+    }
+};
+
+int main()
+{
+    shapes s;
+    cout<<"circle area: "<<s.area(7)<<endl;
+    cout<<"Triangle area: "<<s.area(2,3)<<endl;
+    return 0;
+}
