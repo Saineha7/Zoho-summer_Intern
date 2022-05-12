@@ -1,4 +1,5 @@
 #include<iostream>
+#include<stdlib.h>
 using namespace std;
 
 class vehicle
@@ -75,6 +76,7 @@ int main()
 	int ch; char o;
 	do
 	{
+		system("clear");
 		cout<<"\n 1. compare 2 bikes"<<endl;
 		cout<<"\n 2. compare 2 cars"<<endl;
 		cout<<"\n 3. compare 1 car and 1 bike"<<endl;
