@@ -1,10 +1,11 @@
 #include<iostream>
 #include<vector>
+#include<stdlib.h>
 using namespace std;
 
 class Bank
 {
-	public:
+	protected:
 		string name, estDate, bankType;
 		float intRate;
 	public:
@@ -327,6 +328,7 @@ int main()
 	int ch;	char o;
 	do
 	{
+		system("clear");
 		cout<<"\n 1. HDFC"<<endl;
 		cout<<"\n 2. SBI"<<endl;
 		cout<<"\n 3. ICIC"<<endl;
@@ -396,7 +398,9 @@ int main()
 					   Broker b;
 					   b.printAll();
 					   break;
-					}		  
+					}	
+				
+			default: cout<<"\n Invalid option, enter a valid one!"<<endl;	
 		}
 		cout<<"\n Do you want to continue(y/n): ";
 		cin>>o;
