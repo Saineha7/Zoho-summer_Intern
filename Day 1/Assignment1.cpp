@@ -3,7 +3,7 @@ using namespace std;
 
 class vehicle
 {
-	public:
+	protected:
 		string vehicleType, brand, model, color;
 		int mileage, price;	
 		virtual void getNoOfWheels() = 0;
@@ -111,7 +111,9 @@ int main()
 					cout<<b;
 					b.getNoOfWheels(); cout<<"\n\n";
 					int x = c < b; if(x) cout<<"Car is cheaper!"; else cout<<"Bike is cheaper!"<<endl;
-					break;	}	
+					break;	}
+				
+			default: cout<<"\n Invalid option, enter a valid one!"<<endl;	
 		}
 		cout<<"\n";
 		cout<<"\n Do you want to continue(y/n): ";	
@@ -119,5 +121,3 @@ int main()
 	}while(o=='y');
 	return 0;
 }
-
-
