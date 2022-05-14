@@ -171,7 +171,7 @@ void city::printVisitMatrix()
     {
         for(int j=0;j<Mcols;j++)
         {
-            if(buildings[i][j]==1 && visited[i][j]==0)
+            if(buildings[i][j]!=0 && visited[i][j]==0)
                 visited[i][j]=-1; // Assign -1 to all the solo buildings with no neighbours
             cout<<visited[i][j]<<" ";
         }
