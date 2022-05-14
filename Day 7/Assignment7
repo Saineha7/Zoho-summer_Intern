@@ -1,6 +1,6 @@
-#include <iostream>
-#include <sstream>
-#include <iterator>
+#include<iostream>
+#include<sstream>
+#include<iterator>
 #include<vector>
 #include<string>
 using namespace std;
@@ -116,6 +116,22 @@ class smartStove : public device
         }
 };
 
+// lamda function
+ auto checkCondition = [](string op, float currVal, float val)
+{
+    if(op == ">" && currVal > val)
+        return true;
+    if(op == "<" && currVal < val)    
+        return true;
+    if(op == ">=" && currVal >= val)
+        return true;
+    if(op == "<=" && currVal <= val)
+        return true;
+    else 
+    {
+        return false;
+    }
+};
 // Sensor class controls all the functions of sensors and associated devices
 class sensor
 {
@@ -134,24 +150,6 @@ class sensor
         val = std::stof(sensorValue); // convert string value given by user into float value 
     }
     
-    bool checkCondition()
-    {
-            if(op == ">")
-             return currVal > val;
-            if(op == "<")    
-                return currVal < val;
-            if(op == ">=")
-            return currVal >= val;
-            if(op == "<=")
-            return currVal <= val;
-            else 
-            {
-                status = false;
-                return 0;
-            }
-        
-    }
-
     void checkCount()
     {
         device d;
@@ -169,7 +167,7 @@ class sensor
     void fn()
     {
         device d;
-        if(checkCondition())
+        if(checkCondition(op,currVal,val))
         {
             {
                 if(sensorName=="temperature") // for a particular sensor user can turn on which ever device he/she wants
@@ -230,7 +228,7 @@ class sensor
                 
             }
         }
-        else if(!checkCondition() && (functionName=="fanOFF" || functionName == "sprinklerOFF" || functionName == "lightOFF" || functionName == "closeDoor" || functionName == "stoveOFF")) 
+        else if(!checkCondition(op,currVal,val) && (functionName=="fanOFF" || functionName == "sprinklerOFF" || functionName == "lightOFF" || functionName == "closeDoor" || functionName == "stoveOFF")) 
             checkCount();
         else  // works for if(!check() && functionName=="fanON" .....)
         {
