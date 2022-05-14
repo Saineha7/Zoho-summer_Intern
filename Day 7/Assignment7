@@ -1,0 +1,493 @@
+#include <iostream>
+#include <sstream>
+#include <iterator>
+#include<vector>
+#include<string>
+using namespace std;
+
+class device
+{
+    public:
+        static bool deviceStatus;
+        static int batteryLevel;
+        int count;  // To check if a device is already ON or not
+    public:
+        void onConnect();
+        void onDisconnect();
+        void onBatteryLevelChange(int newBattery);
+};
+
+bool device::deviceStatus=false;
+int device::batteryLevel = 100;
+void device::onConnect()
+{
+    cout<<" Device connected"<<endl;
+}
+
+void device::onDisconnect()
+{
+    cout<<" Device disconnected"<<endl;
+}
+
+void device::onBatteryLevelChange(int newBattery)
+{
+    batteryLevel = newBattery;bool o;
+    cout<<"\n Current battery status: "<<batteryLevel<<endl;
+    if(batteryLevel<=10)
+    {
+        cout<<"\n Critically low battery level!"<<endl;
+        cout<<"\n Do you want to charge? (1/0)";
+        cin>>o;
+        if(o)
+            batteryLevel=100;
+        else
+            exit(1);    
+    }
+}
+
+class smartFan: public device 
+{
+    public:
+        smartFan(bool status)
+        {
+            deviceStatus = status;
+            if(status)  // if status is true connect device else disconnect
+                {cout<<"\n Fan -";onConnect();cout<<endl;}
+            else
+                {cout<<"\n Fan -";onDisconnect();cout<<endl;}   
+            cout<<"\n Status: "<<deviceStatus<<endl;
+        }
+};
+
+class smartLight : public device 
+{
+    public:
+        smartLight(bool status)
+        {
+            deviceStatus = status;
+            if(status)
+                {cout<<"\n Light - ";onConnect();cout<<endl;}
+            else 
+              {cout<<"\n Light - ";onDisconnect();cout<<endl;}      
+            cout<<"\n Status: "<<deviceStatus<<endl;
+        }
+};
+
+class smartSprinkler : public device 
+{
+    public: 
+        smartSprinkler(bool status)
+        {
+            deviceStatus = status;
+            if(status)
+                {cout<<"\n Sprinkler - ";onConnect();cout<<endl;}
+            else 
+                {cout<<"\n Sprinkler - ";onDisconnect();cout<<endl;}
+            cout<<"\n Status: "<<deviceStatus<<endl;
+        }
+};
+
+class smartDoor : public device 
+{
+    public: 
+        smartDoor(bool status)
+        {
+            deviceStatus = status;
+            if(status)
+                {cout<<"\n Door - ";onConnect();cout<<endl;}
+            else     
+                {cout<<"\n Sprinkler - ";onDisconnect();cout<<endl;}
+            cout<<"\n Status: "<<deviceStatus<<endl;
+        }
+};
+
+class smartStove : public device 
+{
+    public:
+        smartStove(bool status)
+        {
+            deviceStatus = status;
+            if(status)
+                {cout<<"\n Stove - ";onConnect();cout<<endl;}
+            else
+                {cout<<"\n Stove - ";onDisconnect();cout<<endl;}
+            cout<<"\n Status: "<<deviceStatus<<endl;
+        }
+};
+
+// Sensor class controls all the functions of sensors and associated devices
+class sensor
+{
+  public:
+    string sensorName, op, deviceName, sensorValue,functionName,status;int count=0;
+    static float currVal;
+    float val;
+    
+     sensor(string sensorName, string sensorValue, string op, string deviceName, string functionName)
+    {
+        this->sensorName = sensorName;
+        this->sensorValue = sensorValue;
+        this->op = op;
+        this->deviceName = deviceName;
+        this->functionName = functionName;
+        val = std::stof(sensorValue); // convert string value given by user into float value 
+    }
+    
+    bool checkCondition()
+    {
+            if(op == ">")
+             return currVal > val;
+            if(op == "<")    
+                return currVal < val;
+            if(op == ">=")
+            return currVal >= val;
+            if(op == "<=")
+            return currVal <= val;
+            else 
+            {
+                status = false;
+                return 0;
+            }
+        
+    }
+
+    void checkCount()
+    {
+        device d;
+        if(count>=1) // if a device is already on do the following
+        { 
+            cout<<"\n "<<deviceName<<" already ON"<<endl;
+            cout<<"\n Battery level: "<<d.batteryLevel<<endl;
+            return;
+        }
+        ++count;
+        on();
+        d.onBatteryLevelChange(d.batteryLevel-10);
+    }
+    
+    void fn()
+    {
+        device d;
+        if(checkCondition())
+        {
+            {
+                if(sensorName=="temperature") // for a particular sensor user can turn on which ever device he/she wants
+                {
+                    if(functionName == "fanON" || functionName == "sprinklerON" || functionName == "lightON" || functionName == "openDoor" || functionName == "stoveON") // if user given input is fanON and temperature > 2 (for example)
+                        checkCount();   
+                    else
+                    {
+                        off();
+                        d.onBatteryLevelChange(d.batteryLevel);
+                    }
+                }
+                
+                else if(sensorName =="light")
+                {
+                    if(functionName == "fanON" || functionName == "sprinklerON" || functionName == "lightON" || functionName == "openDoor" || functionName == "stoveON")
+                        checkCount();
+                    else
+                    {
+                        off();
+                        d.onBatteryLevelChange(d.batteryLevel);
+                    }
+                        
+                }
+                
+                else if(sensorName =="water")
+                {
+                    if(functionName == "fanON" || functionName == "sprinklerON" || functionName == "lightON" || functionName == "openDoor" || functionName == "stoveON")
+                        checkCount();
+                    else
+                    {
+                        off();
+                        d.onBatteryLevelChange(d.batteryLevel);
+                    }
+                }
+                
+                else if(sensorName =="motion")
+                {
+                    if(functionName == "fanON" || functionName == "sprinklerON" || functionName == "lightON" || functionName == "openDoor" || functionName == "stoveON")
+                        checkCount();   
+                    else
+                    {
+                        off();
+                        d.onBatteryLevelChange(d.batteryLevel);
+                    }
+                }
+                
+                 else if(sensorName =="gas")
+                {
+                    if(functionName == "fanON" || functionName == "sprinklerON" || functionName == "lightON" || functionName == "openDoor" || functionName == "stoveON")
+                        checkCount();
+                    else
+                    {
+                        off();
+                        d.onBatteryLevelChange(d.batteryLevel);
+                    }
+                }
+                
+            }
+        }
+        else if(!checkCondition() && (functionName=="fanOFF" || functionName == "sprinklerOFF" || functionName == "lightOFF" || functionName == "closeDoor" || functionName == "stoveOFF")) 
+            checkCount();
+        else  // works for if(!check() && functionName=="fanON" .....)
+        {
+            off();
+            cout<<"\n The current sensorValue is too low to turn ON the device"<<endl;
+            d.onBatteryLevelChange(d.batteryLevel);
+            count=0;
+        }
+    }
+    
+    void on()
+    {
+        if(deviceName=="fan")
+        {
+            cout<<"\n Fan ON"<<endl;
+            smartFan sf(true); // constructor called 
+        }
+        else if(deviceName=="light")  
+        {
+            cout<<"\n Light ON"<<endl;
+            smartLight sl(true);
+        }
+        else if(deviceName=="sprinkler") 
+        {
+            cout<<"\n Sprinkler ON"<<endl; 
+            smartSprinkler ss(true);
+        } 
+        else if(deviceName=="door")  
+        {
+            cout<<"\n Door OPEN"<<endl;  
+            smartDoor sd(true);
+        }
+        else if(deviceName=="gas")
+        {
+            cout<<"\n Stove ON"<<endl;
+            smartStove sst(true);
+        }
+    }
+    
+    void off()
+    {
+        if(deviceName=="fan")
+        {
+            cout<<"\n Fan OFF"<<endl;
+            smartFan sf(false);
+        }
+        else if(deviceName=="light")  
+        {
+            cout<<"\n Light OFF"<<endl;
+            smartLight sl(false);
+        }
+        else if(deviceName=="sprinkler") 
+        {
+            cout<<"\n Sprinkler OFF"<<endl; 
+            smartSprinkler ss(false);
+        } 
+        else if(deviceName=="door")  
+        {
+            cout<<"\n Door CLOSE"<<endl;  
+            smartDoor sd(false);
+        }
+        else if(deviceName=="gas")
+        {
+            cout<<"\n Stove OFF"<<endl;
+            smartStove sst(false);
+        }
+    }
+};
+
+float sensor::currVal=0;
+
+class temperatureSensor: public sensor
+{
+    public: 
+        temperatureSensor(string sensorName, string sensorValue, string op, string deviceName, string functionName):sensor(sensorName, sensorValue, op, deviceName, functionName) {}
+
+     void onTemperatureChange(float newTemperature)
+    {
+        cout<<"\n Sensor: ";
+        currVal = newTemperature;
+        cout<<"\n ~ Temperature change detected ~"<<endl;
+        cout<<"\n Current temperature: "<<currVal<<endl;
+    }   
+
+};
+
+class motionSensor : public sensor 
+{
+    public:
+        motionSensor(string sensorName, string sensorValue, string op, string deviceName, string functionName):sensor(sensorName, sensorValue, op, deviceName, functionName) {}
+        
+        void onMotionDetection(float newProximity)
+        {
+            cout<<"\n Sensor: ";
+            currVal = newProximity;
+            cout<<"\n ~ Motion change detected ~"<<endl;
+            cout<<"\n Current proximity: "<<currVal<<endl;
+        }
+};
+
+class waterLevelSensor : public sensor 
+{
+    public:
+        waterLevelSensor(string sensorName, string sensorValue, string op, string deviceName, string functionName):sensor(sensorName, sensorValue, op, deviceName, functionName) {}
+        
+        void onWaterLevelChange(float newWaterLevel)
+        {
+            cout<<"\n Sensor: ";
+            currVal = newWaterLevel;
+            cout<<"\n ~ Water level change detected ~"<<endl;
+            cout<<"\n Current water level: "<<currVal<<endl;
+        }
+};
+
+class lightIntensitySensor : public sensor
+{
+    public:
+        lightIntensitySensor(string sensorName, string sensorValue, string op, string deviceName, string functionName):sensor(sensorName, sensorValue, op, deviceName, functionName) {}
+        
+        void onLightIntensityChange(float newLightIntensity)
+        {
+            cout<<"\n Sensor: ";
+            currVal = newLightIntensity;
+            cout<<"\n ~ Change in light intensity level detected ~"<<endl;
+            cout<<"\n Current Light Intensity level: "<<currVal<<endl;
+        }
+};
+
+class gasDetectionSensor : public sensor 
+{
+    public:
+        gasDetectionSensor(string sensorName, string sensorValue, string op, string deviceName, string functionName):sensor(sensorName, sensorValue, op, deviceName, functionName) {}
+        
+        void onGasConcentrationChange(float newGasLevel)
+        {
+            cout<<"\n Sensor: ";
+            currVal = newGasLevel;
+            cout<<"\n ~ Gas concentration change detected ~"<<endl;
+            cout<<"\n Current gas concentration: "<<currVal<<endl;
+        }
+};
+
+int main()
+{
+  
+    string s,s1;    
+    cout<<"\n Enter if stmt: ";
+    getline(cin,s); // since the user given input contains space, use getline 
+    cout<<endl;
+    stringstream ss(s);
+    istream_iterator<string> begin(ss);
+    istream_iterator<string> end;
+    vector<std::string> vstrings(begin, end); // split the if stmt given by user and store in vstrings vector
+    
+    cout<<"\n Enter then stmt: ";
+    getline(cin,s1);
+    cout<<endl;
+    stringstream sss(s1);
+    istream_iterator<std::string> begin1(sss);
+    istream_iterator<std::string> end1;
+    vector<std::string> vstrings1(begin1, end1); // split the then stmt given by user and store in vstrings1 vector   
+        
+    char o;string button;
+    // Initialize constructor of below sensors
+    temperatureSensor t(vstrings[1],vstrings[3],vstrings[2],vstrings1[1],vstrings1[2]); 
+    motionSensor m(vstrings[1],vstrings[3],vstrings[2],vstrings1[1],vstrings1[2]);
+    waterLevelSensor w(vstrings[1],vstrings[3],vstrings[2],vstrings1[1],vstrings1[2]);
+    gasDetectionSensor g(vstrings[1],vstrings[3],vstrings[2],vstrings1[1],vstrings1[2]);
+    lightIntensitySensor l(vstrings[1],vstrings[3],vstrings[2],vstrings1[1],vstrings1[2]);
+
+    cout<<"\n Current sensor value: 0"<<endl;
+
+    do{
+        cout<<"\n Perform operations"<<endl;
+        cin>>button;
+        if(vstrings[1]=="temperature")
+        {
+            if(button == "ti") 
+            {
+                t.onTemperatureChange(++t.currVal); // increase temperature value by 1
+                t.fn();                             // fn() is at line 168
+            }
+            else if(button == "td")
+            {
+                t.onTemperatureChange(--t.currVal); // decrease temperature value by 1
+                t.fn();                             // fn() is at line 168
+            }
+            else
+                cout<<"\n Incorrect key press"<<endl;
+        }
+
+        if(vstrings[1]=="motion")
+        {
+            if(button == "mi")
+            {
+                m.onMotionDetection(++m.currVal); // increase proximity value by 1
+                m.fn();
+            }
+            else if(button == "md")
+            {
+                m.onMotionDetection(--m.currVal); // decrease proximity value by 1
+                m.fn();
+            }
+            else
+                cout<<"\n Incorrect key press"<<endl;
+        }
+
+        if(vstrings[1]=="water")
+        {
+            if(button == "wi")
+            {
+                w.onWaterLevelChange(++w.currVal); // increase water level value by 1
+                w.fn();
+            }
+            else if(button == "wd")
+            {
+                w.onWaterLevelChange(--w.currVal); // decrease water level value by 1
+                w.fn();
+            }
+            else
+                cout<<"\n Incorrect key press"<<endl;
+        }
+
+        if(vstrings[1]=="light")
+        {
+            if(button == "li")
+            {
+                l.onLightIntensityChange(++l.currVal); // increase light intensity value by 1
+                l.fn();
+            }
+            else if(button == "ld")
+            {
+                l.onLightIntensityChange(--l.currVal); // decrease light intensity value by 1
+                l.fn();
+            }
+            else
+                cout<<"\n Incorrect key press"<<endl;
+        }
+
+        if(vstrings[1]=="gas")
+        {
+            if(button == "gi")
+            {
+                g.onGasConcentrationChange(++g.currVal); // increase gas concentration value by 1
+                g.fn();
+            }
+            else if(button == "gd")
+            {
+                g.onGasConcentrationChange(--g.currVal); // decrease gas concentration value by 1
+                g.fn();
+            }
+            else
+                cout<<"\n Incorrect key press"<<endl;
+        }
+
+        cout<<"\n Do you want to cont(y?): ";
+        cin>>o;
+    } while(o=='y');
+
+    return 0;
+}
