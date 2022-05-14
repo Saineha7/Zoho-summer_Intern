@@ -10,6 +10,7 @@ class device
     public:
         static bool deviceStatus;
         static int batteryLevel;
+    protected:    
         int count;  // To check if a device is already ON or not
     public:
         void onConnect();
