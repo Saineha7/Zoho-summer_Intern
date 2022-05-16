@@ -394,7 +394,7 @@ int main()
 	int ch;	char o;
 	do
 	{
-		system("CLS");
+		system("CLS || clear"); 
 		cout<<"\n 1. HDFC"<<endl;
 		cout<<"\n 2. SBI"<<endl;
 		cout<<"\n 3. ICIC"<<endl;
