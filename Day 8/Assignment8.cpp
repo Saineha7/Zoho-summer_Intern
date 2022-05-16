@@ -29,10 +29,12 @@ class mobileConnection
                     mobileBillAmount += newAmount;
                     cout<<"\n Updated mobile amount: "<<mobileBillAmount<<endl;
                 }
-                else if(temp==99)
+                else if(temp==99 && mobileBillAmount!=0)
                 {
                     cout<<"\n Current mobile bill amount: "<<mobileBillAmount<<endl;
-                    mobileBillAmount = 0;
+                    cout<<"\n Enter amount to pay: ";
+                    cin>>newAmount;
+                    mobileBillAmount -= newAmount;
                     cout<<"\n Updated mobile bill amount: "<<mobileBillAmount<<endl;
                 }
                 flag=1;
@@ -73,12 +75,14 @@ class landlineConnection
                         cout<<"\n Updated landline amount: "<<landlineBillAmount<<endl;
                     }
                 }
-                else if(temp==99)   // to clear off all bills due - user pays off all the standing bills
+                else if(temp==99 && landlineBillAmount!=0)   // to clear off all bills due - user pays off all the standing bills
                 {
                     if((no.substr(no.length()-6))==landlineNo)
                     {
                         cout<<"\n Current landline bill amount: "<<landlineBillAmount<<endl;
-                        landlineBillAmount = 0;  
+                        cout<<"\n Enter amount to pay: ";
+                        cin>>newAmount;
+                        landlineBillAmount -= newAmount;  
                         cout<<"\n Updated landline bill amount: "<<landlineBillAmount<<endl;
                     }
                 }
