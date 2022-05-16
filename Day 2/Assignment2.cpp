@@ -56,6 +56,7 @@ class HDFC: public Bank, Loan
 			cout<<"\n 1. Bank Name: "<<name<<endl;
 			cout<<"\n 2. Established Date: "<<estDate<<endl;
 			cout<<"\n 3. Bank Type: "<<bankType<<endl;
+			cout<<"\n 4. Interest rate: "<<intRate<<endl;
 		}
 		
 		void getAvailableLoans()
@@ -71,7 +72,6 @@ class HDFC: public Bank, Loan
 		float getInterestRate()
 		{
 			return 5;
-			cout<<"\n Interest rate is "<<intRate<<endl;
 		}
 		
 		void docsRequired()
@@ -112,6 +112,7 @@ class SBI: public Bank, Loan
 			cout<<"\n 1. Bank Name: "<<name<<endl;
 			cout<<"\n 2. Established Date: "<<estDate<<endl;
 			cout<<"\n 3. Bank Type: "<<bankType<<endl;
+			cout<<"\n 4. Interest rate is "<<intRate<<endl;
 		}
 		
 		void getAvailableLoans()
@@ -126,7 +127,6 @@ class SBI: public Bank, Loan
 		float getInterestRate()
 		{
 			return 6;
-			cout<<"\n Interest rate is "<<intRate<<endl;
 		}
 		
 		void docsRequired()
@@ -167,6 +167,7 @@ class ICICI: public Bank, Loan
 			cout<<"\n 1. Bank Name: "<<name<<endl;
 			cout<<"\n 2. Established Date: "<<estDate<<endl;
 			cout<<"\n 3. Bank Type: "<<bankType<<endl;
+			cout<<"\n 4. Interest rate: "<<intRate<<endl;
 		}
 		
 		void getAvailableLoans()
@@ -181,7 +182,7 @@ class ICICI: public Bank, Loan
 		float getInterestRate()
 		{
 			return 7;
-			cout<<"\n Interest rate is "<<intRate<<endl;
+			cout<<"\n Interest rate: "<<intRate<<endl;
 		}
 		
 		void docsRequired()
@@ -223,6 +224,7 @@ class IndianBank: public Bank, Loan
 			cout<<"\n 1. Bank Name: "<<name<<endl;
 			cout<<"\n 2. Established Date: "<<estDate<<endl;
 			cout<<"\n 3. Bank Type: "<<bankType<<endl;
+			cout<<"\n 4. Interest rate: "<<intRate<<endl;
 		}
 		
 		void getAvailableLoans()
@@ -238,7 +240,6 @@ class IndianBank: public Bank, Loan
 		float getInterestRate()
 		{
 			return 2;
-			cout<<"\n Interest rate is "<<intRate<<endl;
 		}
 		
 		void docsRequired()
