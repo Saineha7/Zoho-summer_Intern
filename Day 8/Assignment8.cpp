@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cstring>
 #include<vector>
+#include<regex>
 using namespace std;
 
 struct numbers
@@ -10,18 +11,19 @@ struct numbers
     string landline;
 }num[10];
 
-bool flag=0;int index1=0; int index2=0;
+regex no1("100"); regex no2("99");
+bool flag=0;int index1=0, index2=0;
 class mobileConnection
 {
     public: 
       string mobileNo;
       float mobileBillAmount=0, newAmount=0;  
 
-      void checkConnection(int temp, string no)
+      void checkConnection(string temp, string no)
         {
             if(no==mobileNo)   // already existing connection
             {
-                if(temp==100)
+                if(regex_match(temp,no1))
                 {
                     cout<<"\n Current mobile bill amount: "<<mobileBillAmount<<endl;
                     cout<<"\n Enter amount to update: ";
@@ -29,7 +31,7 @@ class mobileConnection
                     mobileBillAmount += newAmount;
                     cout<<"\n Updated mobile amount: "<<mobileBillAmount<<endl;
                 }
-                else if(temp==99 && mobileBillAmount!=0)
+                else if(regex_match(temp,no2) && mobileBillAmount!=0)
                 {
                     cout<<"\n Current mobile bill amount: "<<mobileBillAmount<<endl;
                     cout<<"\n Enter amount to pay: ";
@@ -60,11 +62,11 @@ class landlineConnection
         string stdCode;    // STD code can be of any length
         float landlineBillAmount=0,newAmount=0;
 
-        void checkConnection(int temp, string no)
+        void checkConnection(string temp, string no)
         {
             if(no.length()>=6)
             {
-                if(temp==100)       // to update already existing amount - add amount which user should pay
+                if(regex_match(temp,no1))       // to update already existing amount - add amount which user should pay
                 {
                     if((no.substr(no.length()-6))==landlineNo)
                     {
@@ -75,7 +77,7 @@ class landlineConnection
                         cout<<"\n Updated landline amount: "<<landlineBillAmount<<endl;
                     }
                 }
-                else if(temp==99 && landlineBillAmount!=0)   // to clear off all bills due - user pays off all the standing bills
+                else if(regex_match(temp,no2) && landlineBillAmount!=0)   // to clear off all bills due - user pays off all the standing bills
                 {
                     if((no.substr(no.length()-6))==landlineNo)
                     {
@@ -119,11 +121,11 @@ class billPayments
         }
         void updateBillAmount(string no)
         {
-            obj.checkConnection(100,no);
+            obj.checkConnection("100",no);
         }
         void zeroBillAmount(string no) 
         {
-            obj.checkConnection(99,no);  
+            obj.checkConnection("99",no);  
         }
 };
 
@@ -175,8 +177,7 @@ int main()
                     }
                     break;
 
-            case 3: 
-                    cout<<"\n Enter number for which to pay bill: ";
+            case 3: cout<<"\n Enter number for which to pay bill: ";
                     cin>>no;flag=0;
                     for(int i=0;i<index1;i++)
                     {
