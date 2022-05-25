@@ -92,25 +92,21 @@ class miscellaneous
         {
             try
             {
-                //0x7ffffffff
-                //int *ptr = new int[0x7ffffffff];
-                ptr = NULL;
-                //*ptr = 7; 
-                //cout<<"ptr value: "<<*ptr<<endl;
-                if(ptr!=NULL)
+                int *ptr = NULL; 
+                ptr = new(nothrow) int[0x7ffffffff];
+                 
+                if(!ptr)
                 {
                     delete(ptr);
-                    throw HeapMemoryUnavilable();//bad_alloc();
+                    throw HeapMemoryUnavilable();
                 }
-                else 
-                {
-                    *ptr = 7; 
-                    cout<<"ptr value: "<<*ptr<<endl;
-                }
+                else
+                    cout<<"\n Memory allocation successful!"<<endl;
             }
-            catch(HeapMemoryUnavilable h)//(bad_alloc &h)
-            {   cout<<h.what();
-                cout<<"Memory is compromised!";
+            catch(HeapMemoryUnavilable h)
+            {   
+                cout<<h.memoryCompromised()<<endl;
+                cout<<"\n Exception Handling Accomplished"<<endl;
             }
         } 
 
