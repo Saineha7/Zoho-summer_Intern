@@ -24,7 +24,7 @@ class FormatMismatch : public exception
 class HeapMemoryUnavilable : public exception
 {
     public:
-        string what()
+        string memoryCompromised()
         {
             return "Memory is compromised!";
         }
