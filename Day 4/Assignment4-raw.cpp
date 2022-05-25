@@ -71,19 +71,19 @@ class Rectangle
 int main()
 {	
  
-	Rectangle r3;
-	r3.print();
+	Rectangle r1;
+	r1.print();
  
 	Rectangle r2(1,2);
 	r2.print();
  
-	Rectangle r(1,2,3,4);
-	r.print();
+	Rectangle r3(1,2,3,4);
+	r3.print();
  
 	Rectangle r4(1.2f,2.3f,3.4f,4.5f);
 	r4.print();
  
-	Rectangle r5(r2);
+	Rectangle r5(r4);
 	r5.print();
 	return 0;
 }
