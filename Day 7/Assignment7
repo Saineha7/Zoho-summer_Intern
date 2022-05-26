@@ -3,6 +3,8 @@
 #include<iterator>
 #include<vector>
 #include<string>
+#include<algorithm>
+#include<functional>
 using namespace std;
 
 class device
@@ -115,8 +117,6 @@ class smartStove : public device
             cout<<"\n Status: "<<deviceStatus<<endl;
         }
 };
-
-// lamda function
  auto checkCondition = [](string op, float currVal, float val)
 {
     if(op == ">" && currVal > val)
@@ -371,10 +371,23 @@ class gasDetectionSensor : public sensor
         }
 };
 
+void printOperations(vector<string> availableOperations)
+{
+    // lambda expression to print available operations
+    for_each(availableOperations.begin(), availableOperations.end(), [](string i)
+    {
+        cout << i << " ";
+    });
+    cout << endl;
+}
+            
+
 int main()
 {
   
-    string s,s1;    
+    string s,s1;   
+    cout<<"\n Sample statement: "<<endl;
+    cout<<"\n if: temperature > 2"<<"\n then: fan fanON"<<endl; 
     cout<<"\n Enter if stmt: ";
     getline(cin,s); // since the user given input contains space, use getline 
     cout<<endl;
@@ -400,12 +413,16 @@ int main()
     lightIntensitySensor l(vstrings[1],vstrings[3],vstrings[2],vstrings1[1],vstrings1[2]);
 
     cout<<"\n Current sensor value: 0"<<endl;
+    cout<<"\n Available opeartions: ";
+    vector<string> availableOperations={"ti","td","li","ld","mi","md","wi","wd","gi","gd"};
+    printOperations(availableOperations);
 
     do{
         cout<<"\n Perform operations"<<endl;
         cin>>button;
         if(vstrings[1]=="temperature")
         {
+            
             if(button == "ti") 
             {
                 t.onTemperatureChange(++t.currVal); // increase temperature value by 1
