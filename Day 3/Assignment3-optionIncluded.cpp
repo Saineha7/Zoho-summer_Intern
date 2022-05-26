@@ -10,8 +10,6 @@ struct coordinates{
     int y;
 };
 
-// Given - Write a function that will return an array with group members count and number of groups formed, so 
-// have created this struct.
 struct result
 {
     unique_ptr<int[]> arr;
