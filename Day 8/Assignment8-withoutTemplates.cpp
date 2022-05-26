@@ -1,31 +1,60 @@
 #include<iostream>
 #include<cstring>
 #include<vector>
+#include<regex>
 using namespace std;
 
+struct numbers
+{
+    string mobile;
+    string std;
+    string landline;
+}num[10];
+
+bool flag=0;int index1=0, index2=0;
 class mobileConnection
 {
     public: 
       string mobileNo;
-      float mobileBillAmount=0;  
+      float mobileBillAmount=0, newAmount=0;  
 
-      int checkConnection(string no)
+      void checkConnection(int temp, string no)
         {
             if(no==mobileNo)   // already existing connection
-                return 1;  
-            else
-                return 0;
+            {
+                if(temp==100)
+                {
+                    cout<<"\n Current mobile bill amount: "<<mobileBillAmount<<endl;
+                    cout<<"\n Enter amount to update: ";
+                    cin>>newAmount;
+                    mobileBillAmount += newAmount;
+                    cout<<"\n Updated mobile amount: "<<mobileBillAmount<<endl;
+                }
+                else if(temp==99 && mobileBillAmount!=0)
+                {
+                    cout<<"\n Current mobile bill amount: "<<mobileBillAmount<<endl;
+                    cout<<"\n Enter amount to pay: ";
+                    cin>>newAmount;
+                    mobileBillAmount -= newAmount;
+                    cout<<"\n Updated mobile bill amount: "<<mobileBillAmount<<endl;
+                }
+                flag=1;
+            }
+            // else condition handled by main()
         }
 
-      void addMobileConnection(string no)
+      void addConnection(int i, string no)
       {
-          if(no.length()==10)
+          regex regexRule("[0-9]{10}");
+          bool isvalid = regex_match(no,regexRule);
+          if(isvalid)
           {
-            mobileNo = no;
+            num[i].mobile = mobileNo = no;
+            cout<<"\n Mobile no: "<<mobileNo<<endl;
             cout<<"\n New mobile connection added successfully!"<<endl;
+            flag=1;
           }
-          else
-            cout<<"\n Incorrect, enter a valid mobile number"<<endl;
+          // else condition handled by main()
       }
 };
 
@@ -34,105 +63,89 @@ class landlineConnection
     public:
         string landlineNo;
         string stdCode;    // STD code can be of any length
-        float landlineBillAmount=0;
+        float landlineBillAmount=0,newAmount=0;
 
-        int checkConnection(string no)
+        void checkConnection(int temp, string no)
         {
-            if(no.length()>=6){
-                if((no.substr(no.length()-6))==landlineNo)
-                    return 1;
-                    else return 0;}
-                else 
-                    return 0;
+            regex regexRule("[0-9]{8,}");
+            bool isvalid = regex_match(no,regexRule);
+            if(isvalid)
+            {
+                if(temp==100)       // to update already existing amount - add amount which user should pay
+                {
+                    if((no.substr(no.length()-6))==landlineNo)
+                    {
+                        cout<<"\n Current landline bill amount: "<<landlineBillAmount<<endl;
+                        cout<<"\n Enter amount to update: ";
+                        cin>>newAmount;
+                        landlineBillAmount += newAmount;
+                        cout<<"\n Updated landline amount: "<<landlineBillAmount<<endl;
+                    }
+                }
+                else if(temp==99 && landlineBillAmount!=0)   // to clear off all bills due - user pays off all the standing bills
+                {
+                    if((no.substr(no.length()-6))==landlineNo)
+                    {
+                        cout<<"\n Current landline bill amount: "<<landlineBillAmount<<endl;
+                        cout<<"\n Enter amount to pay: ";
+                        cin>>newAmount;
+                        landlineBillAmount -= newAmount;  
+                        cout<<"\n Updated landline bill amount: "<<landlineBillAmount<<endl;
+                    }
+                }
+                flag=1;
+            }
+            // else condition handled by main()
+
         }
 
-         void addLandlineConnection(string std, string no)
+         void addConnection(int i, string no)
         {
-          if(no.length()>=6)
+            regex regexRule("[0-9]{8,}");
+            bool isvalid = regex_match(no,regexRule);
+          if(isvalid)
           {
-            stdCode = std;
-            landlineNo = no;
+            stdCode = no.substr(0, (no.length()-6));
+            num[i].std =  stdCode;// leave out the last 6 digits and stor the rest of the value as std code
+            landlineNo = (no.substr(no.length()-6)); //  get the last 6 digits and store as landline number
+            num[i].landline = landlineNo;
+            cout<<"\n STD code: "<<stdCode<<endl;
+            cout<<"\n Landline no: "<<landlineNo<<endl;
             cout<<"\n New landline connection added successfully!"<<endl;
+            flag=1;
           }
-          else
-            cout<<"\n Incorrect, enter a valid landline number"<<endl;
+          // else condition handled by main()
         }
 };
 
-//template <class T>
-class billPayments //: public mobileConnection, public landlineConnection
+template <class T>
+class billPayments 
 {
     public:
-        mobileConnection m;
-        landlineConnection l;
-        float newAmount;
+        T obj;
     public:
-        //void zeroBillAmount(string no);
-        void storeConnections(int x, string no, string std)
+        void storeConnections(int i, string no)
         {
-            
-            if((x == 1))
-            {
-                m.addMobileConnection(no);
-                cout<<"Mobile no: "<<m.mobileNo<<endl;
-                
-            }
-            if(x==0)
-            {
-                l.addLandlineConnection(std, no);
-                cout<<"\n Landline std code: "<<l.stdCode<<endl;
-                cout<<"Landline no: "<<l.landlineNo<<endl;
-            }
+            obj.addConnection(i,no);
         }
-        void updateBillAmount(string no, string std)
+        void updateBillAmount(string no)
         {
-            if(m.checkConnection(no)==1)
-            {
-                cout<<"\n Current mobile bill amount: "<<m.mobileBillAmount<<endl;
-                cout<<"\n Enter amount to update: ";
-                cin>>newAmount;
-                m.mobileBillAmount += newAmount;
-                cout<<"\n Updated mobile amount: "<<m.mobileBillAmount<<endl;
-            }
-            else if(l.checkConnection(no)==1)
-            {
-                cout<<"\n Current landline bill amount: "<<m.mobileBillAmount<<endl;
-                cout<<"\n Enter amount to update: ";
-                cin>>newAmount;
-                l.landlineBillAmount += newAmount;
-                cout<<"\n Updated mobile amount: "<<l.landlineBillAmount<<endl;
-            }
-            else 
-                cout<<"\n Invalid number, no such connection exists!"<<endl;
+            obj.checkConnection(100,no);
         }
-
-
-void zeroBillAmount(string no) // obj can either be a mobile or landline
-{
-    cout<<"\n check 1: "<<(m.checkConnection(no)==1)<<endl;
-    cout<<"\n check 2: "<<(l.checkConnection(no)==1)<<endl;
-    if(m.checkConnection(no)==1)
-    {
-        cout<<"\n Current mobile bill amount: "<<m.mobileBillAmount<<endl;
-        m.mobileBillAmount = 0;
-        cout<<"\n Updated mobile bill amount: "<<m.mobileBillAmount<<endl;
-    }
-    else if(l.checkConnection(no)==1) 
-    {
-        
-        cout<<"\n Current landline bill amount: "<<l.landlineBillAmount<<endl;
-        l.landlineBillAmount = 0;  
-        cout<<"\n Updated landline bill amount: "<<l.landlineBillAmount<<endl;
-    }
-    else 
-        cout<<"\n Invalid number, no such connection exists!"<<endl;
-}
+        void zeroBillAmount(string no) 
+        {
+            obj.checkConnection(99,no);  
+        }
 };
+
 int main()
 {
-    string no,std;   int n;billPayments b;int ch;char o;
+    string no,std; int n,op,ch; char o;
+    billPayments<mobileConnection> m[10];
+    billPayments<landlineConnection> l[10];
     do
     {
+        
         cout<<"\n 1. Add a new mobile connection"<<endl;
         cout<<"\n 2. Add a new landline connection"<<endl;
         cout<<"\n 3. Pay bill using the connection number"<<endl;
@@ -142,33 +155,90 @@ int main()
 
         switch(ch)
         {
-            case 1: cout<<"\n Enter number: ";
-                    cin>>no;
-                    b.storeConnections(1,no,"0");
+            case 1: cout<<"\n Enter number of connections: ";
+                    cin>>n;
+                    flag=0;
+                    for(int i=0;i<n;index1++,i++)
+                    {
+                        cout<<"\n Enter number "<<index1+1<<" :";
+                        cin>>no;
+                        if(no.length()==10)
+                            m[index1].storeConnections(index1,no);
+                        else
+                            {
+                                cout<<"\n Incorrect, enter a valid mobile number"<<endl;
+                                break;
+                            }    
+                    }
                     break;
 
-            case 2: cout<<"\n Enter std code: ";
-                    cin>>std;
-                    cout<<"\n Enter number: ";
-                    cin>>no;
-                    b.storeConnections(0,no,std);   
+            case 2: cout<<"\n Enter number of connections: ";
+                    cin>>n;flag=0;
+                    for(int i=0;i<n;index2++,i++)
+                    {
+                        cout<<"\n Enter number along with STD code: "<<index2+1<<" :";
+                        cin>>no;
+                        regex regexRule("[0-9]{8,}");
+                        bool isvalid = regex_match(no,regexRule);
+                        if(isvalid)
+                            l[index2].storeConnections(index2,no);  
+                        else{ 
+                            cout<<"\n Incorrect, enter a valid landline number"<<endl;
+                            break;}
+                    }
                     break;
 
             case 3: cout<<"\n Enter number for which to pay bill: ";
-                    cin>>no;
-                    b.zeroBillAmount(no);       
+                    cin>>no;flag=0;
+                    for(int i=0;i<index1;i++)
+                    {
+                        if(num[i].mobile == no)
+                            m[i].zeroBillAmount(no);
+                        else if(no.length()>=6 && (num[i].landline == (no.substr(no.length()-6))))
+                            l[i].zeroBillAmount(no);
+                        else
+                            continue;
+                    }
+                    for(int i=0;i<index2;i++)
+                    {
+                        if(num[i].mobile == no)
+                            m[i].zeroBillAmount(no);
+                        else if(no.length()>=6 && (num[i].landline == (no.substr(no.length()-6))))
+                            l[i].zeroBillAmount(no);
+                        else
+                            continue;
+                    }    
+                    if(!flag) cout<<"\n Incorrect, enter a valid number"<<endl;
                     break;
 
-            case 4: cout<<"\n Enter number for which to update bill: ";
-                    cin>>no;   
-                    b.updateBillAmount(no, std);
-                    break;     
-
+            case 4:  
+                        cout<<"\n Enter number for which to update bill: ";
+                        cin>>no;flag=0;
+                        for(int i=0;i<index1;i++)
+                        {
+                            if(num[i].mobile == no) 
+                                m[i].updateBillAmount(no);
+                            else if(no.length()>=6 && (num[i].landline == (no.substr(no.length()-6))))
+                                l[i].updateBillAmount(no);     
+                            else    
+                                continue; 
+                        }
+                         for(int i=0;i<index2;i++)
+                        {
+                            if(num[i].mobile == no) 
+                                m[i].updateBillAmount(no);
+                            else if(no.length()>=6 && (num[i].landline == (no.substr(no.length()-6))))
+                                l[i].updateBillAmount(no);     
+                            else    
+                                continue; 
+                        }
+                        if(!flag) cout<<"\n Incorrect, enter a valid number"<<endl;
+                        break;
+                 
             default: cout<<"\n Invalid option, enter a valid one"<<endl;        
         }
         cout<<"\n Do you want to continue(y/n): ";
         cin>>o;
     }while(o=='y');   
     return 0;
-    
 }
