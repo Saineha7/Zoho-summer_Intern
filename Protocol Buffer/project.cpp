@@ -34,7 +34,7 @@ class notepad
         {
             newName = fname + to_string(++count);
             fstream file;
-            file.open(fname);
+            file.open(fname);   
             ifstream ini_file(fname);
             ofstream out_file(newName);
             if (ini_file && out_file)
@@ -63,8 +63,8 @@ class notepad
         else
             cout << "\n Failed to enter directory" << endl;
         fstream file;
-        file.open(fname);
-        if (file)
+        file.open(fname);       // open the file fname
+        if (file)               // if file fname exists
         {
             cout << "\n 1. Update a line" << endl;
             cout << "\n 2. Update entire document" << endl;
@@ -86,8 +86,8 @@ class notepad
                 cin >> line;
                 note* noo = n.mutable_noteobj(lineNo - 1);
                 noo->set_content(line);
-                fstream output1(fname, ios::out | ios::trunc | ios::binary);
-                n.SerializeToOstream(&output1);
+                fstream output1(fname, ios::out | ios::trunc | ios::binary); // open file fname in write mode
+                n.SerializeToOstream(&output1);     // write to file
                 cout << "Updated content at - line " << lineNo << " : " << no.content() << endl;
                 v.set_versionno(++versionNo);
                 cout << "\n version no: " << v.versionno();
@@ -272,19 +272,21 @@ int main()
 {
     notes n; int ch; notepad np; char o; string fname;
     people p; SignIn s; string dirname;
+    
+    // open the file userDetails in binary mode to read data
     fstream input("UserDetails", ios::in | ios::binary);
-    if (!input) 
+    if (!input)         // if no such file exists, create one
     {
         cout << "\n File not found.Creating a new file." << endl;
     }
-    else if (!p.ParseFromIstream(&input)) 
+    else if (!p.ParseFromIstream(&input))       // else if file exists but unable to read/parse the file
     {
         cerr << "Failed to parse address book." << endl;
         return -1;
     }
-    s.checkUser(p);
-    fstream output("UserDetails", ios::out | ios::trunc | ios::binary); // trunc
-    if (!p.SerializeToOstream(&output)) 
+    s.checkUser(p);         // message person details filled now
+    fstream output("UserDetails", ios::out | ios::trunc | ios::binary);         // open file userDetails in write mode  
+    if (!p.SerializeToOstream(&output))     // write details to userDetails file
     {
         cerr << "Failed to write address book." << endl;
         return -1;
@@ -310,6 +312,8 @@ int main()
             
                 cout << "\n Enter file name : ";
                 cin >> fname;
+            
+                 // Move into the directory allocated for current user 
                 if (_chdir(dirPath) == 0) cout << "\n Entered directory " << endl;
                 else
                     cout << "\n Failed to enter directory" << endl;
