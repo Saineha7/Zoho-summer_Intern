@@ -1,4 +1,3 @@
-
 //////////////////////////////// old version //////////////////////////////
 
 #include<iostream>
@@ -66,9 +65,12 @@ public:
             password = encrypt(password, 7);
             cout << "\n Encrypted password: " << password << endl;
             cout << "\n Location : ";
-            cin >> place;
-            if (_mkdir(dirname) == 0) cout << "\n New directory created!" << endl;
+            cin >> place;                                                   // && _mkdir((dirName+"versions").c_str())
+            if (_mkdir(dirname)  == 0) cout << "\n New directory created!" << endl;
             else cout << "\n Directory creation failed" << endl;
+            if (_chdir(dirname) == 0) cout << "\n Entered directory " << endl;
+            else
+                cout << "\n Failed to enter directory" << endl;
             ref->set_id(p.user_size());
             ref->set_email(email);
             ref->set_password(password);
