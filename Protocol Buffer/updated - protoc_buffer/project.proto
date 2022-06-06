@@ -1,0 +1,37 @@
+// (note.proto)
+syntax = "proto3";    
+
+message note                    // for a single line of content
+{
+	string content = 1;
+}
+
+message notes                   // i.e message project, each notepad project will contain these attributes
+{
+    int64 projectId = 1;
+    string userId = 2;
+    string projectName = 3;
+    repeated note noteObj = 4;
+}
+
+message operation
+{
+    string Add = 1;             // If add operation performed push value into this attribute, else in the remaining 
+    string update = 2;          // and finally check which operation was performed based on the fileds that are not empty
+    string delete = 3;
+    repeated note noteObj = 4;  // to store previous content
+}
+
+message version
+{
+    string id = 1;
+    int64 versionNo = 2;
+    string projectId = 3;
+    string timeOfCreation = 4;
+    repeated operation op = 5;
+}
+
+message versions
+{
+    repeated version ver = 1;
+}
