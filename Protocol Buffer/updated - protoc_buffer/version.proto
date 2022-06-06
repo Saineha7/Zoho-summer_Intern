@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message version
+{
+    string id = 1;
+    int32 versionNo = 2;
+    string projectId = 3;
+}
+
+message operation
+{
+    string Add = 1;             
+    string update = 2;          
+    string delete = 3;  
+}
+
+message operations
+{
+    repeated operation op = 1;
+}
