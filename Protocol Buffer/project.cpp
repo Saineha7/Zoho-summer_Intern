@@ -1,7 +1,10 @@
+///////////////////////  old version //////////////////////////////
+
 #include"consoleApplication2.cpp"
 #include"note.pb.h"
 #include<filesystem>
 #include<algorithm>
+#include <filesystem> 
 #include<string>
 #include<stdio.h>
 using std::filesystem::directory_iterator;
@@ -18,7 +21,7 @@ class notepad
     {
         note* ref = n.add_noteobj();
         cout << "\n Enter content to add ~" << endl;
-        cin >> notepadContent;
+        getline(cin >> ws, notepadContent);             // since getline() doesn't ignore whitespace use " >> ws "
         ref->set_content(notepadContent);
         cout << "\n Content added successfully!" << endl;
     }
@@ -34,11 +37,13 @@ class notepad
         {
             newName = fname + to_string(++count);
             fstream file;
-            file.open(fname);   
+            file.open(fname);
             ifstream ini_file(fname);
             ofstream out_file(newName);
             if (ini_file && out_file)
             {
+                fstream input1(fname, ios::in | ios::binary);
+                n.ParseFromIstream(&input1);
                 while (getline(ini_file, line))
                 {
                     out_file << line << "\n";
@@ -48,10 +53,6 @@ class notepad
                 cout << "\n New version created" << endl;
             }
         }
-        //v.set_id(to_string(++pid));
-        //v.set_versionno(1);
-        //cout << "\n version no: " << v.versionno();
-        //v.set_projectid(to_string(++pid));
     }
 
     void updateProject(notes& n, string dirname)
@@ -63,8 +64,8 @@ class notepad
         else
             cout << "\n Failed to enter directory" << endl;
         fstream file;
-        file.open(fname);       // open the file fname
-        if (file)               // if file fname exists
+        file.open(fname);
+        if (file)
         {
             cout << "\n 1. Update a line" << endl;
             cout << "\n 2. Update entire document" << endl;
@@ -83,26 +84,32 @@ class notepad
                 const note& no = n.noteobj(lineNo - 1);
                 cout << "Current content at - line " << lineNo << " : " << no.content() << endl;
                 cout << "\n Enter content to update: ";
-                cin >> line;
+                getline(cin >> ws, line);
                 note* noo = n.mutable_noteobj(lineNo - 1);
                 noo->set_content(line);
-                fstream output1(fname, ios::out | ios::trunc | ios::binary); // open file fname in write mode
-                n.SerializeToOstream(&output1);     // write to file
+                fstream output1(fname, ios::out | ios::trunc | ios::binary);
+                n.SerializeToOstream(&output1);
                 cout << "Updated content at - line " << lineNo << " : " << no.content() << endl;
                 v.set_versionno(++versionNo);
                 cout << "\n version no: " << v.versionno();
+                dirname = dirname + "versions";
+                if (_chdir(dirname.c_str()) == 0) cout << "\n Entered versions directory " << endl;
+                else
+                    cout << "\n Failed to enter versions directory" << endl;
                 if (v.versionno() == 1 || v.versionno() % 5 == 0)
                 {
                     newName = fname + to_string(++count);
                     fstream file;
                     file.open(fname);
-                    ifstream ini_file(fname);
-                    ofstream out_file(newName);
-                    if(ini_file && out_file) 
+                    ifstream in(fname);     // input file
+                    ofstream out(newName);  // output file
+                    if(in && out) 
                     {
-                        while (getline(ini_file, line)) 
+                        fstream input1(fname, ios::in | ios::binary);
+                        n.ParseFromIstream(&input1);
+                        while (getline(in, line))   // get the content from old file "in"
                         {
-                            out_file << line << "\n";
+                            out << line << "\n";    // and write to new file "out"
                         }
                         fstream output1(newName, ios::out | ios::trunc | ios::binary);
                         n.SerializeToOstream(&output1);
@@ -121,13 +128,16 @@ class notepad
                 for (int i = 0; i < lineNo; i++)
                 {
                     note* noo = n.add_noteobj();
-                    cin >> line;
+                    getline(cin, line);
                     noo->set_content(line);
                     fstream output1(fname, ios::out | ios::trunc | ios::binary);
                     n.SerializeToOstream(&output1);
                 }
                 v.set_versionno(++versionNo);
                 cout << "\n version no: " << v.versionno();
+                if (_chdir(dirname.c_str()) == 0) cout << "\n Entered versions directory " << endl;
+                else
+                    cout << "\n Failed to enter versions directory" << endl;
                 if (versionNo == 1 || versionNo % 5 == 0)
                 {
                     newName = fname + to_string(++count);
@@ -137,6 +147,8 @@ class notepad
                     ofstream out_file(newName);
                     if (ini_file && out_file)
                     {
+                        fstream input1(fname, ios::in | ios::binary);
+                        n.ParseFromIstream(&input1);
                         while (getline(ini_file, line))
                         {
                             out_file << line << "\n";
@@ -182,6 +194,9 @@ class notepad
                 n.SerializeToOstream(&output1);
                 v.set_versionno(++versionNo);
                 cout << "\n version no: " << v.versionno();
+                if (_chdir(dirname.c_str()) == 0) cout << "\n Entered versions directory " << endl;
+                else
+                    cout << "\n Failed to enter versions directory" << endl;
                 if (v.versionno() == 1 || v.versionno() % 5 == 0)
                 {
                     newName = fname + to_string(++count);
@@ -191,6 +206,8 @@ class notepad
                     ofstream out_file(newName);
                     if (ini_file && out_file)
                     {
+                        fstream input1(fname, ios::in | ios::binary);
+                        n.ParseFromIstream(&input1);
                         while (getline(ini_file, line))
                         {
                             out_file << line << "\n";
@@ -210,6 +227,9 @@ class notepad
                 cout << "\n contents cleared successfully!" << endl;
                 v.set_versionno(++versionNo);
                 cout << "\n version no: " << v.versionno();
+                if (_chdir(dirname.c_str()) == 0) cout << "\n Entered versions directory " << endl;
+                else
+                    cout << "\n Failed to enter versions directory" << endl;
                 if (versionNo == 1 || versionNo % 5 == 0)
                 {
                     newName = fname + to_string(++count);
@@ -219,6 +239,8 @@ class notepad
                     ofstream out_file(newName);
                     if (ini_file && out_file)
                     {
+                        fstream input1(fname, ios::in | ios::binary);
+                        n.ParseFromIstream(&input1);
                         while (getline(ini_file, line))
                         {
                             out_file << line << "\n";
@@ -234,18 +256,32 @@ class notepad
             cout << "\n No such file exists!" << endl;
     }
 
-    void revertVersion(notes &n, string fname)
+    void revertVersion(notes &n, string dirname)
     {
-        int vno;
+        int vno,temp; string fname;
+        if (_chdir(dirname.c_str()) == 0) cout << "\n Entered directory " << endl;
+        else
+            cout << "\n Failed to enter directory" << endl;
+        cout << "\n Enter file name: ";
+        cin >> fname;
         cout << "\n Enter the version no: ";
         cin >> vno;
+        temp = vno;
         newName = fname + to_string(vno);
+        cout << "\n newName: " << newName << endl;
         fstream file;
         file.open(newName);
         if (file)
         {
-            remove((fname + to_string(++vno)).c_str());
+            fstream file;
+            file.open((fname + to_string(++temp)).c_str()); // if next version of specified version exists then, 
+            if (file)
+                remove((fname + to_string(temp)).c_str()); // remove that version  
+            else
+                cout << "\n Current version is already " << vno << endl;
         }
+        else
+            cout << "\n No such version exists!" << endl;
     }
 
     void dispNoteContent(notes &n)
@@ -272,21 +308,19 @@ int main()
 {
     notes n; int ch; notepad np; char o; string fname;
     people p; SignIn s; string dirname;
-    
-    // open the file userDetails in binary mode to read data
     fstream input("UserDetails", ios::in | ios::binary);
-    if (!input)         // if no such file exists, create one
+    if (!input) 
     {
         cout << "\n File not found.Creating a new file." << endl;
     }
-    else if (!p.ParseFromIstream(&input))       // else if file exists but unable to read/parse the file
+    else if (!p.ParseFromIstream(&input)) 
     {
         cerr << "Failed to parse address book." << endl;
         return -1;
     }
-    s.checkUser(p);         // message person details filled now
-    fstream output("UserDetails", ios::out | ios::trunc | ios::binary);         // open file userDetails in write mode  
-    if (!p.SerializeToOstream(&output))     // write details to userDetails file
+    s.checkUser(p);
+    fstream output("UserDetails", ios::out | ios::trunc | ios::binary);
+    if (!p.SerializeToOstream(&output)) 
     {
         cerr << "Failed to write address book." << endl;
         return -1;
@@ -312,8 +346,6 @@ int main()
             
                 cout << "\n Enter file name : ";
                 cin >> fname;
-            
-                 // Move into the directory allocated for current user 
                 if (_chdir(dirPath) == 0) cout << "\n Entered directory " << endl;
                 else
                     cout << "\n Failed to enter directory" << endl;
@@ -355,7 +387,8 @@ int main()
         case 5: np.dispNoteContent(n);
                 break;
 
-        case 6: 
+        case 6: np.revertVersion(n, dirname);
+                break;
 
         default: cout << "\n Invalid option" << endl;
 
