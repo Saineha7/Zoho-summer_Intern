@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message note                    
+{
+	string content = 1;
+}
+
+message notes             
+{
+    int32 pid = 1;
+    string userId = 2;
+    string pName = 3;
+    repeated note noteObj = 4;
+}    
